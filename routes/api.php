@@ -3,27 +3,29 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Api\ApiController;
-
-Route::post("register", [ApiController::class, "register"]);
-Route::post("login", [ApiController::class, "login"]);
+use App\Http\Controllers\Api\ProductsController;
 
 Route::group([
-    "middleware" => ["auth:api"]
+    "prefix" => "v1"
 ], function () {
 
-    Route::get("profile", [ApiController::class, "profile"]);
-    Route::get("logout", [ApiController::class, "logout"]);
+    // Routes without authentication
+    Route::post("register", [ApiController::class, "register"]);
+    Route::post("login", [ApiController::class, "login"]);
+
+    Route::get("products", [ProductsController::class, "index"]);
+    Route::get("products/{product}", [ProductsController::class, "show"]);
+
+    // Routes with authentication
+    Route::group([
+        "middleware" => ["auth:api"]
+    ], function () {
+        Route::get("profile", [ApiController::class, "profile"]);
+        Route::get("logout", [ApiController::class, "logout"]);
+
+        // Restricting access to store, destroy, and update methods to authenticated users
+        Route::post("products/add", [ProductsController::class, "store"]);
+        Route::delete("products/{product}", [ProductsController::class, "destroy"]);
+        Route::put("products/{product}/edit", [ProductsController::class, "update"]);
+    });
 });
-
-// Route::group(['namespace' => 'Api', 'prefix' => 'v1'], function () {
-    // Route::post('login', [AuthenticationController::class, 'store']);
-    // Route::post('logout', [AuthenticationController::class, 'destroy'])->middleware('auth:api');
-// });
-
-
-// Route::post('register', [RegisterController::class, 'register']);
-// Route::post('login', [RegisterController::class, 'login']);
-
-// Route::middleware('auth:api')->group(function () {
-//     Route::resource('products', ProductsController::class);
-// });

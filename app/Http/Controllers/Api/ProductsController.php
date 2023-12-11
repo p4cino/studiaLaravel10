@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Api\BaseController as BaseController;
 use App\Models\Product;
 
 use App\Http\Resources\Product as ProductResource;
@@ -16,7 +15,8 @@ class ProductsController extends Controller
      */
     public function index()
     {
-        return ProductResource::collection(Product::all());
+        //Laravel Purity for auto filters
+        return ProductResource::collection(Product::filter()->get());
     }
 
     /**
@@ -24,8 +24,15 @@ class ProductsController extends Controller
      */
     public function store(Request $request)
     {
-        $product = Product::create($request->all());
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'body' => 'required|string',
+            'price' => 'required|decimal:2',
+            'amount' => 'required|numeric|min:0',
+            'image' => 'required|string|min:0',
+        ]);
 
+        $product = Product::create($request->all());
         return response()->json($product, 201);
     }
 
@@ -42,6 +49,14 @@ class ProductsController extends Controller
      */
     public function update(Request $request, Product $product)
     {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'body' => 'required|string',
+            'price' => 'required|decimal:2',
+            'amount' => 'required|numeric|min:0',
+            'image' => 'required|string|min:0',
+        ]);
+
         $product->update($request->all());
 
         return response()->json($product);
