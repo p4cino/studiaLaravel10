@@ -21,6 +21,7 @@ class Product extends JsonResource
             'price' => $this->price,
             'created_at' => $this->created_at->format('d/m/Y'),
             'updated_at' => $this->updated_at->format('d/m/Y'),
+            'image' => $this->image ? asset('storage/' . $this->image) : null,
         ];
     }
 }
