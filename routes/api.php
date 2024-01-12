@@ -10,8 +10,8 @@ Route::group([
 ], function () {
 
     // Routes without authentication
-//    Route::post("register", [ApiController::class, "register"]);
-//    Route::post("login", [ApiController::class, "login"]);
+    Route::post("register", [ApiController::class, "register"]);
+    Route::post("login", [ApiController::class, "login"]);
 
     Route::get("products", [ProductsController::class, "index"]);
     Route::get("products/{product}", [ProductsController::class, "show"]);

@@ -27,13 +27,16 @@ class ProductsController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'body' => 'required|string',
-            'price' => 'required|decimal:2',
+            'price' => 'required|numeric|min:0',
             'amount' => 'required|numeric|min:0',
             'image' => 'required|image',
         ]);
 
+        $formattedPrice = number_format($request->input('price'), 2, '.', '');
+
         $path = $request->file('image')->store('images', 'public');
         $requestData = $request->all();
+        $requestData['price'] = $formattedPrice;
         $requestData['image'] = $path;
 
         $product = Product::create($requestData);
