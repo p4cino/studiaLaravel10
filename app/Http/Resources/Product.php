@@ -17,8 +17,9 @@ class Product extends JsonResource
         return [
             'id' => $this->id,
             'title' => $this->title,
-            'description' => $this->body,
+            'body' => $this->body,
             'price' => $this->price,
+            'amount' => $this->amount,
             'created_at' => $this->created_at->format('d/m/Y'),
             'updated_at' => $this->updated_at->format('d/m/Y'),
             'image' => $this->image ? asset('storage/' . $this->image) : null,
